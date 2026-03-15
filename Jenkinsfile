@@ -15,8 +15,8 @@ pipeline {
         
         stage('SonarQube Analysis') {
             steps {
-                withEnv(["SONAR_TOKEN=squ_d1847c12f098272613eb1380e11b449e5a0a887f"]) {
-                    sh "sonar-scanner -Dsonar.projectKey=hrmanagement -Dsonar.projectName=HRManagement -Dsonar.sources=frontend,backend -Dsonar.host.url=http://192.168.1.110:9000 -Dsonar.token=${SONAR_TOKEN} -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**"
+                withEnv(["SONAR_AUTH=squ_d1847c12f098272613eb1380e11b449e5a0a887f"]) {
+                    sh "sonar-scanner -Dsonar.projectKey=hrmanagement -Dsonar.projectName=HRManagement -Dsonar.sources=frontend,backend -Dsonar.host.url=http://192.168.1.110:9000 -Dsonar.token=${SONAR_AUTH} -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**"
                 }
             }
         }

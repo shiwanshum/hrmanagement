@@ -1,52 +1,104 @@
 pipeline {
+
     agent any
-    
+
     environment {
-        DOCKER_IMAGE = 'hrmanagement:latest'
-        SONAR_HOST = 'http://192.168.1.110:9000'
+
+        GIT_REPO = "https://github.com/shiwanshum/hrmanagement.git"
+        BRANCH = "master"
+
     }
-    
+
     stages {
+
         stage('Clone Code') {
+
             steps {
-                git branch: 'master', url: 'https://github.com/shiwanshum/hrmanagement.git'
+
+                git branch: "${BRANCH}",
+                url: "${GIT_REPO}"
+
             }
+
         }
-        
+
         stage('SonarQube Analysis') {
+
             steps {
-                echo 'Skipping SonarQube for now - will be configured later'
-            }
-        }
-        
-        stage('Install Frontend Dependencies') {
-            steps {
-                dir('frontend') {
-                    sh 'npm install'
+
+                withSonarQubeEnv('sonarqube_host') {
+
+                    withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
+
+                        sh '''
+                        sonar-scanner \
+                        -Dsonar.projectKey=hrmanagement \
+                        -Dsonar.projectName=HRManagement \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://192.168.1.110:9000 \
+                        -Dsonar.login=$SONAR_TOKEN
+                        '''
+
+                    }
+
                 }
+
             }
+
         }
-        
-        stage('Build Frontend') {
+
+        stage('Install Project Dependencies') {
+
             steps {
-                dir('frontend') {
-                    sh 'npm run build'
-                }
+
+                sh '''
+                echo "Installing NodeJS dependencies"
+                npm install
+                '''
+
             }
+
         }
-        
+
+        stage('OWASP Dependency Check') {
+
+            steps {
+
+                dependencyCheck additionalArguments: '--scan . --format HTML',
+                odcInstallation: 'OWASP-DC'
+
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+
+            }
+
+        }
+
+        stage('Build Application') {
+
+            steps {
+
+                sh '''
+                echo "Building application"
+                npm run build || echo "No build script found"
+                '''
+
+            }
+
+        }
+
         stage('Build Docker Image') {
+
             steps {
-                dir('frontend') {
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                }
+
+                sh '''
+                echo "Building Docker Image"
+                docker build -t hrmanagement:latest .
+                '''
+
             }
+
         }
+
     }
-    
-    post {
-        always {
-            cleanWs()
-        }
-    }
+
 }

@@ -37,7 +37,9 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE} ."
+                dir('frontend') {
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
             }
         }
     }

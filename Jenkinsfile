@@ -15,7 +15,7 @@ pipeline {
         
         stage('SonarQube Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     sh '''sonar-scanner \
                         -Dsonar.projectKey=hrmanagement \
                         -Dsonar.projectName=HRManagement \

@@ -3,10 +3,7 @@ pipeline {
     
     environment {
         DOCKER_IMAGE = 'hrmanagement:latest'
-    }
-    
-    tools {
-        nodejs 'NodeJS'
+        SONAR_HOST = 'http://192.168.1.110:9000'
     }
     
     stages {
@@ -18,9 +15,12 @@ pipeline {
         
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube_host') {
-                    sh 'sonar-scanner -Dsonar.projectKey=hrmanagement -Dsonar.projectName=HRManagement -Dsonar.sources=frontend,backend -Dsonar.exclusions=**/node_modules/**,**/dist/**'
-                }
+                sh '''sonar-scanner \
+                    -Dsonar.projectKey=hrmanagement \
+                    -Dsonar.projectName=HRManagement \
+                    -Dsonar.sources=frontend,backend \
+                    -Dsonar.host.url=http://192.168.1.110:9000 \
+                    -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**'''
             }
         }
         

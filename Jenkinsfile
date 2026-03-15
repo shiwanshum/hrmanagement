@@ -49,7 +49,7 @@ pipeline {
 
                 sh '''
                 echo "Installing NodeJS dependencies"
-                npm install
+                cd frontend && npm install
                 '''
 
             }
@@ -75,7 +75,7 @@ pipeline {
 
                 sh '''
                 echo "Building application"
-                npm run build || echo "No build script found"
+                cd frontend && npm run build || echo "No build script found"
                 '''
 
             }
@@ -88,7 +88,7 @@ pipeline {
 
                 sh '''
                 echo "Building Docker Image"
-                docker build -t hrmanagement:latest .
+                cd frontend && docker build -t hrmanagement:latest .
                 '''
 
             }

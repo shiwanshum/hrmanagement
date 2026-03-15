@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'hrmanagement:latest'
         SONAR_HOST = 'http://192.168.1.110:9000'
-        SONAR_TOKEN = 'squ_85ffda0488f2f9e947b728b6ab2d2a413b85a6b7'
+        SONAR_TOKEN = 'squ_d1847c12f098272613eb1380e11b449e5a0a887f'
     }
     
     stages {

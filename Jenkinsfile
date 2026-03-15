@@ -15,13 +15,7 @@ pipeline {
         
         stage('SonarQube Analysis') {
             steps {
-                sh '''sonar-scanner \
-                    -Dsonar.projectKey=hrmanagement \
-                    -Dsonar.projectName=HRManagement \
-                    -Dsonar.sources=frontend,backend \
-                    -Dsonar.host.url=http://192.168.1.110:9000 \
-                    -Dsonar.token=squ_85ffda0488f2f9e947b728b6ab2d2a413b85a6b7 \
-                    -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**'''
+                sh "sonar-scanner -Dsonar.projectKey=hrmanagement -Dsonar.projectName=HRManagement -Dsonar.sources=frontend,backend -Dsonar.host.url=http://192.168.1.110:9000 -Dsonar.token=squ_85ffda0488f2f9e947b728b6ab2d2a413b85a6b7 -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**"
             }
         }
         

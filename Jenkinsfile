@@ -56,18 +56,26 @@ pipeline {
 
         }
 
-        // stage('OWASP Dependency Check') {
+        stage('OWASP Dependency Check') {
 
-        //     steps {
+            steps {
 
-        //         dependencyCheck additionalArguments: '--scan . --format HTML',
-        //         odcInstallation: 'OWASP-DC'
+                sh '''
+                echo "Running OWASP Dependency Check"
+                /var/jenkins_home/dependency-check/bin/dependency-check.sh --project HRManagement --scan ./frontend --format HTML --out /var/jenkins_home/workspace/owasp-report.html || true
+                '''
+                publishHTML(target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: '/var/jenkins_home/workspace',
+                    reportFiles: 'owasp-report.html',
+                    reportName: 'OWASP Dependency Check Report'
+                ])
 
-        //         dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
 
-        //     }
-
-        // }
+        }
 
         stage('Build Application') {
 

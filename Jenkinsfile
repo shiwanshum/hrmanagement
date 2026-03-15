@@ -15,12 +15,15 @@ pipeline {
         
         stage('SonarQube Analysis') {
             steps {
-                sh '''sonar-scanner \
-                    -Dsonar.projectKey=hrmanagement \
-                    -Dsonar.projectName=HRManagement \
-                    -Dsonar.sources=frontend,backend \
-                    -Dsonar.host.url=http://192.168.1.110:9000 \
-                    -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**'''
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    sh '''sonar-scanner \
+                        -Dsonar.projectKey=hrmanagement \
+                        -Dsonar.projectName=HRManagement \
+                        -Dsonar.sources=frontend,backend \
+                        -Dsonar.host.url=http://192.168.1.110:9000 \
+                        -Dsonar.token=${SONAR_TOKEN} \
+                        -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**'''
+                }
             }
         }
         

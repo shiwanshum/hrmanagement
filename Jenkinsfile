@@ -26,20 +26,16 @@ pipeline {
 
             steps {
 
-                withSonarQubeEnv('sonarqube_host') {
+                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
 
-                    withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
-
-                        sh '''
-                        sonar-scanner \
-                        -Dsonar.projectKey=hrmanagement \
-                        -Dsonar.projectName=HRManagement \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://192.168.1.110:9000 \
-                        -Dsonar.login=$SONAR_TOKEN
-                        '''
-
-                    }
+                    sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=hrmanagement \
+                    -Dsonar.projectName=HRManagement \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://192.168.1.110:9000 \
+                    -Dsonar.login=$SONAR_TOKEN
+                    '''
 
                 }
 
